@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp
+../image_headers/DIP.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/image_headers/DIP.hpp
+
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/image_headers/DIP.hpp
+cstdio
+-
+iostream
+-
+vector
+-
+
