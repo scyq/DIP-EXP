@@ -34,12 +34,22 @@ void exp_3() {
     img_8->derive_bmp("../EXP0/3.bmp");
 }
 
+void exp_4() {
+    img_24->set_new_size(img_24->width + 120, img_24->height + 120);
+    img_24->translate_image(60, 60);
+    img_24->derive_bmp("../EXP0/4_24.bmp");
+
+    img_8->set_new_size(img_8->width + 120, img_8->height + 120);
+    img_8->translate_image(60, 60);
+    img_8->derive_bmp("../EXP0/4_8.bmp");
+}
+
 int main()
 {
     img_8 = new BMP_INDEX("../EXP0/bmp_8.bmp");
     img_24 = new BMP_PIXEL_24("../EXP0/bmp_24.bmp");
-    exp_1();
-    exp_2();
-    exp_3();
-
+//    exp_1();
+//    exp_2();
+//    exp_3();
+    exp_4();
 }
