@@ -9,6 +9,8 @@
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp
 ../headers/BMP.hpp
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
+unistd.h
+-
 
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
 cstdio

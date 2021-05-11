@@ -26,20 +26,28 @@ typedef struct BMP_INFO_HEADER {
     unsigned int biClrImportant; // 0
 } BMP_INFO_HEADER;
 
-typedef struct Pixel {
+typedef struct Pixel_24 {
     unsigned char B, G, R;
-} Pixel;
+} Pixel_24;
+
+typedef struct Pixel_32 {
+    unsigned char B, G, R, A;
+} Pixel_32;
 
 typedef struct Point {
     int x;
     int y;
 } Point;
 
-void print_pixel(Pixel p) {
+void print_pixel(Pixel_24 p) {
     std::cout << (int) p.R << ' ' << (int) p.G << ' ' << (int) p.B << std::endl;
 }
 
-Pixel get_random_color() {
+void print_pixel(Pixel_32 p) {
+    std::cout << (int) p.R << ' ' << (int) p.G << ' ' << (int) p.B << " " << (int) p.A << std::endl;
+}
+
+Pixel_24 get_random_color_24() {
     srand((unsigned) time(nullptr));
     /* return [a, b] */
     int a = 0;
@@ -48,10 +56,25 @@ Pixel get_random_color() {
     unsigned char r = (rand() % (b - a + 1)) + a;
     unsigned char g = (rand() % (b - a + 1)) + a;
     unsigned char _b = (rand() % (b - a + 1)) + a;
-    Pixel temp = {_b, g, r};
+    Pixel_24 temp = {_b, g, r};
 
     return temp;
 }
+
+Pixel_32 get_random_color_32() {
+    srand((unsigned) time(nullptr));
+    /* return [a, b] */
+    int a = 0;
+    int b = 255;
+
+    unsigned char r = (rand() % (b - a + 1)) + a;
+    unsigned char g = (rand() % (b - a + 1)) + a;
+    unsigned char _b = (rand() % (b - a + 1)) + a;
+    Pixel_32 temp = {_b, g, r, 0};
+
+    return temp;
+}
+
 
 class BMP {
 protected:
@@ -70,26 +93,23 @@ public:
     BMP_INFO_HEADER info_header;
 
     virtual void derive_bmp(const char *target_file_name) = 0;
-
-    virtual Pixel get_color(int x, int y) = 0;
-
     int coordinate2index(int c_x, int c_y);
 };
 
 // 存像素值的BMP
-class BMP_PIXEL : public BMP {
+class BMP_PIXEL_24 : public BMP {
 public:
-    ~BMP_PIXEL();
+    ~BMP_PIXEL_24();
 
-    explicit BMP_PIXEL(const char *file_name);
+    explicit BMP_PIXEL_24(const char *file_name);
 
-    Pixel *pixels;
+    Pixel_24 *pixels;
 
-    void recolor_rec(Pixel target_pixel, Point left_bottom, Point right_top);
+    void recolor_rec(Pixel_24 target_pixel, Point left_bottom, Point right_top);
 
     void derive_bmp(const char *target_file_name);
 
-    Pixel get_color(int x, int y);
+    Pixel_24 get_color(int x, int y);
 };
 
 // 存索引值的BMP
@@ -99,15 +119,17 @@ public:
 
     explicit BMP_INDEX(const char *file_name);
 
-    int *palette_index;
+    int color_counts;
 
-    Pixel *palette;
+    unsigned char *palette_index;
 
-    void recolor_palette(Pixel target_color, int target_pixel_index);
+    Pixel_32 *palette;
+
+    void recolor_palette(Pixel_32 target_color, int target_pixel_index);
 
     void derive_bmp(const char *target_file_name);
 
-    Pixel get_color(int x, int y);
+    Pixel_32 get_color(int x, int y);
 };
 
 
@@ -123,16 +145,17 @@ BMP::BMP(const char *file_name) {
     bmp_bits = info_header.biBitCount;
 }
 
-BMP_PIXEL::BMP_PIXEL(const char *file_name) : BMP(file_name) {
-    pixels = new Pixel[width * height];
-    fread(pixels, 1, width * height * sizeof(Pixel), fp);
+BMP_PIXEL_24::BMP_PIXEL_24(const char *file_name) : BMP(file_name) {
+    pixels = new Pixel_24[width * height];
+    fread(pixels, 1, width * height * sizeof(Pixel_24), fp);
     fclose(fp);
 }
 
 BMP_INDEX::BMP_INDEX(const char *file_name) : BMP(file_name) {
-    palette = new Pixel[pow(2, bmp_bits)];
-    palette_index = new int[width * height];
-    fread(palette, 1, pow(2, bmp_bits) * sizeof(Pixel), fp);
+    color_counts = pow(2, bmp_bits);
+    palette = new Pixel_32[color_counts];
+    palette_index = new unsigned char[width * height];
+    fread(palette, 1, color_counts * sizeof(Pixel_32), fp);
     fread(palette_index, 1, width * height * sizeof(int), fp);
     fclose(fp);
 }
@@ -141,15 +164,15 @@ int BMP::coordinate2index(int c_x, int c_y) {
     return c_x + c_y * width;
 };
 
-Pixel BMP_INDEX::get_color(int x, int y) {
+Pixel_32 BMP_INDEX::get_color(int x, int y) {
     return palette[palette_index[coordinate2index(x, y)]];
 }
 
-Pixel BMP_PIXEL::get_color(int x, int y) {
+Pixel_24 BMP_PIXEL_24::get_color(int x, int y) {
     return pixels[coordinate2index(x, y)];
 }
 
-void BMP_PIXEL::recolor_rec(Pixel target_pixel, Point left_bottom, Point right_top) {
+void BMP_PIXEL_24::recolor_rec(Pixel_24 target_pixel, Point left_bottom, Point right_top) {
     for (int i = left_bottom.x; i <= right_top.x; i++) {
         for (int j = left_bottom.y; j <= right_top.y; j++) {
             pixels[coordinate2index(i, j)] = target_pixel;
@@ -166,17 +189,17 @@ void BMP_INDEX::derive_bmp(const char *target_file_name) {
     fwrite(&file_type, sizeof(file_type), 1, fout);
     fwrite(&file_header, sizeof(file_header), 1, fout);
     fwrite(&info_header, sizeof(info_header), 1, fout);
-    fwrite(palette, 1, pow(2, bmp_bits) * sizeof(Pixel), fout);
+    fwrite(palette, 1, pow(2, bmp_bits) * sizeof(Pixel_32), fout);
     fwrite(palette_index, 1, width * height * sizeof(int), fout);
     fclose(fout);
 }
 
-void BMP_PIXEL::derive_bmp(const char *target_file_name) {
+void BMP_PIXEL_24::derive_bmp(const char *target_file_name) {
     FILE *fout = fopen(target_file_name, "wb");
     fwrite(&file_type, sizeof(file_type), 1, fout);
     fwrite(&file_header, sizeof(file_header), 1, fout);
     fwrite(&info_header, sizeof(info_header), 1, fout);
-    fwrite(pixels, 1, height * width * sizeof(Pixel), fout);
+    fwrite(pixels, 1, height * width * sizeof(Pixel_24), fout);
     fclose(fout);
 }
 
@@ -185,26 +208,10 @@ BMP_INDEX::~BMP_INDEX() {
     delete[] palette;
 }
 
-void BMP_INDEX::recolor_palette(Pixel target_color, int target_pixel_index) {
+void BMP_INDEX::recolor_palette(Pixel_32 target_color, int target_pixel_index) {
     palette[target_pixel_index] = target_color;
 }
 
-BMP_PIXEL::~BMP_PIXEL() {
+BMP_PIXEL_24::~BMP_PIXEL_24() {
     delete[] pixels;
-}
-
-void output2txt(int x_max, int y_max, const char *target_txt, BMP *img) {
-    if (x_max > img->width || y_max > img->height) {
-        std::cout << "图像数据不够" << std::endl;
-        return;
-    }
-    FILE *fp = fopen(target_txt, "w");
-    for (int y = 0; y < y_max; y++) {
-        for (int x = 0; x < x_max; x++) {
-            auto pix = img->get_color(x, y);
-            fprintf(fp, "(%d, %d, %d)", pix.R, pix.G, pix.B);
-        }
-        fprintf(fp, "\n");
-    }
-    fclose(fp);
 }
