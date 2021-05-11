@@ -124,9 +124,9 @@ public:
     void derive_bmp(const char *target_file_name);
     Pixel_32 get_color(int x, int y);
     void translate_image(int delta_x, int delta_y);
-    void translate_image(int delta_x, int delta_y, Pixel_32 new_bg_color);
+    void translate_image(int delta_x, int delta_y, unsigned char new_bg_color);
     void set_new_size(int new_width, int new_height);
-    void set_new_size(int new_width, int new_height, Pixel_32 new_bg_color);
+    void set_new_size(int new_width, int new_height, unsigned char new_bg_color);
 };
 
 
@@ -205,6 +205,33 @@ void BMP_INDEX::set_new_size(int new_width, int new_height) {
     delete [] to_delete;
 }
 
+void BMP_INDEX::set_new_size(int new_width, int new_height, unsigned char new_bg_color) {
+    if (new_height <= height || new_width <= width) {
+        std::cout << "暂不支持变小" << std::endl;
+        return;
+    }
+    info_header.biWidth = new_width;
+    info_header.biHeight = new_height;
+    auto _w = width;
+    auto _h = height;
+    width = new_width;
+    height = new_height;
+    unsigned char *new_index = new unsigned char[new_height * new_width]{};
+    for (int i = 0; i < width * height; i++) {
+        new_index[i] = new_bg_color;
+    }
+    for (int i = 0; i < _w; i++) {
+        for (int j = 0; j < _h; j++) {
+            int idx = i + j * _w;
+            int new_idx = i + j * new_width;
+            new_index[new_idx] = palette_index[idx];
+        }
+    }
+    auto to_delete = palette_index;
+    palette_index = new_index;
+    delete [] to_delete;
+}
+
 void BMP_PIXEL_24::set_new_size(int new_width, int new_height) {
     if (new_height <= height || new_width <= width) {
         std::cout << "暂不支持变小" << std::endl;
@@ -217,6 +244,33 @@ void BMP_PIXEL_24::set_new_size(int new_width, int new_height) {
     width = new_width;
     height = new_height;
     Pixel_24 *new_pixels = new Pixel_24[new_height * new_width]{};
+    for (int i = 0; i < _w; i++) {
+        for (int j = 0; j < _h; j++) {
+            int idx = i + j * _w;
+            int new_idx = i + j * new_width;
+            new_pixels[new_idx] = pixels[idx];
+        }
+    }
+    auto to_delete = pixels;
+    pixels = new_pixels;
+    delete [] to_delete;
+}
+
+void BMP_PIXEL_24::set_new_size(int new_width, int new_height, Pixel_24 new_bg_color) {
+    if (new_height <= height || new_width <= width) {
+        std::cout << "暂不支持变小" << std::endl;
+        return;
+    }
+    info_header.biWidth = new_width;
+    info_header.biHeight = new_height;
+    auto _w = width;
+    auto _h = height;
+    width = new_width;
+    height = new_height;
+    Pixel_24 *new_pixels = new Pixel_24[new_height * new_width]{};
+    for (int i = 0; i < width * height; i++) {
+        new_pixels[i] = new_bg_color;
+    }
     for (int i = 0; i < _w; i++) {
         for (int j = 0; j < _h; j++) {
             int idx = i + j * _w;
@@ -261,7 +315,6 @@ BMP_PIXEL_24::~BMP_PIXEL_24() {
     delete[] pixels;
 }
 
-
 void BMP_PIXEL_24::translate_image(int delta_x, int delta_y) {
     Pixel_24 *new_pixels = new Pixel_24[width * height]{};
     for (int i = 0; i < width; i++) {
@@ -277,8 +330,44 @@ void BMP_PIXEL_24::translate_image(int delta_x, int delta_y) {
     delete [] to_delete;
 }
 
+void BMP_PIXEL_24::translate_image(int delta_x, int delta_y, Pixel_24 new_bg_color) {
+    Pixel_24 *new_pixels = new Pixel_24[width * height]{};
+    for (int i = 0; i < width * height; i++) {
+        new_pixels[i] = new_bg_color;
+    }
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            int new_idx = (i + delta_x) + (j + delta_y) * width;
+            if (new_idx < width * height) {
+                new_pixels[new_idx] = get_color(i, j);
+            }
+        }
+    }
+    auto to_delete = pixels;
+    pixels = new_pixels;
+    delete [] to_delete;
+}
+
 void BMP_INDEX::translate_image(int delta_x, int delta_y) {
     unsigned char *new_index = new unsigned char [width * height]{};
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            int new_idx = (i + delta_x) + (j + delta_y) * width;
+            if (new_idx < width * height) {
+                new_index[new_idx] = palette_index[i + j * width];
+            }
+        }
+    }
+    auto to_delete = palette_index;
+    palette_index = new_index;
+    delete [] to_delete;
+}
+
+void BMP_INDEX::translate_image(int delta_x, int delta_y, unsigned char new_bg_color) {
+    unsigned char *new_index = new unsigned char [width * height]{};
+    for (int i = 0; i < width * height; i++) {
+        new_index[i] = new_bg_color;
+    }
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             int new_idx = (i + delta_x) + (j + delta_y) * width;

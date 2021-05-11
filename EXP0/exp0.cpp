@@ -35,12 +35,12 @@ void exp_3() {
 }
 
 void exp_4() {
-    img_24->set_new_size(img_24->width + 120, img_24->height + 120);
-    img_24->translate_image(60, 60);
+    img_24->set_new_size(img_24->width + 120, img_24->height + 120, {0, 255, 0});
+    img_24->translate_image(60, 60, {0, 255, 0});
     img_24->derive_bmp("../EXP0/4_24.bmp");
 
-    img_8->set_new_size(img_8->width + 120, img_8->height + 120);
-    img_8->translate_image(60, 60);
+    img_8->set_new_size(img_8->width + 120, img_8->height + 120, 23);
+    img_8->translate_image(60, 60, 23);
     img_8->derive_bmp("../EXP0/4_8.bmp");
 }
 
