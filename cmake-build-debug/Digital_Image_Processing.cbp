@@ -83,7 +83,7 @@
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
-		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/image_headers/DIP.hpp">
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/CMakeLists.txt">

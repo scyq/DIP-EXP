@@ -7,10 +7,10 @@
 #IncludeRegexTransform: 
 
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp
-../image_headers/DIP.hpp
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/image_headers/DIP.hpp
+../headers/BMP.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
 
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/image_headers/DIP.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
 cstdio
 -
 iostream

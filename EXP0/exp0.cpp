@@ -1,24 +1,25 @@
-#include "../image_headers/DIP.hpp"
+#include "../headers/BMP.hpp"
 
-BMP_32 *img;
+BMP_PIXEL *img_24;
+BMP_INDEX *img_8;
 
 void test_0()
 {
-    img->to_txt("1.txt", 5, 5);
+    output2txt(10, 10, "../EXP0/1.txt", img_24);
 }
 
-void test_1(Point l_b, Point r_t)
+void test_1()
 {
-    img->recolor_rec(get_random_color(), l_b, r_t);
-    BMP_32::create_new_bmp32(img->bmp_header, (Pixel_32 **) img->pixels, img->width, img->height, "../EXP0/2.bmp");
+    Point l_b = {img_8 -> width / 3, img_8->height / 3};
+    Point r_t = {img_8->width * 2 / 3, img_8->height * 2 / 3};
+    img_24->recolor_rec(get_random_color(), l_b, r_t);
+    img_24->derive_bmp("../EXP0/2.bmp");
 }
 
 int main()
 {
-    img = new BMP_32("../EXP0/qiuqiu.bmp");
-
-    Point l_b = {img -> width / 3, img->height / 3};
-    Point r_t = {img->width * 2 / 3, img->height * 2 / 3};
-
-    test_1(l_b, r_t);
+    img_8 = new BMP_INDEX("../EXP0/qiuqiu_8.bmp");
+    img_24 = new BMP_PIXEL("../EXP0/qiuqiu_24.bmp");
+    test_0();
+    test_1();
 }
