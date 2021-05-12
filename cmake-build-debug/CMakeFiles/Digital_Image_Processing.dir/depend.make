@@ -3,4 +3,6 @@
 
 CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o: ../EXP0/exp0.cpp
 CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o: ../headers/BMP.hpp
+CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o: ../headers/Color_Quantization.hpp
+CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o: ../headers/Pixel.h
 

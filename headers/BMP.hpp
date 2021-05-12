@@ -75,6 +75,7 @@ protected:
     FILE *fp;
 
 public:
+    BMP();
     explicit BMP(const char *file_name);
     ~BMP();
     int32_t width;
@@ -107,6 +108,7 @@ public:
 // 存索引值的BMP
 class BMP_INDEX : public BMP {
 public:
+    BMP_INDEX(BMP_PIXEL_24 *img_24, Pixel_32 *palette, unsigned char *pidx);
     ~BMP_INDEX();
     explicit BMP_INDEX(const char *file_name);
     int color_counts;
@@ -172,6 +174,8 @@ void BMP_PIXEL_24::recolor_rec(Pixel_24 target_pixel, Point left_bottom, Point r
 BMP::~BMP() {
     delete (fp);
 }
+
+BMP::BMP() {}
 
 void BMP_INDEX::set_new_size(int new_width, int new_height) {
     if (new_height <= height || new_width <= width) {
@@ -373,14 +377,59 @@ void BMP_INDEX::translate_image(int delta_x, int delta_y, unsigned char new_bg_c
     delete [] to_delete;
 }
 
-void BMP24_to_BMP8(BMP_PIXEL_24* img_24, BMP_INDEX* img_8){
+BMP_INDEX::BMP_INDEX(BMP_PIXEL_24 *img_24, Pixel_32* new_palette, unsigned char* pidx):BMP() {
+    file_type = img_24->file_type;
+    file_header = img_24->file_header;
+    info_header = img_24->info_header;
+    info_header.biBitCount = log2(max_color);
+    info_header.biSizeImage = width * height;
+    file_header.bfOffBits = 54 + max_color * 4;
+    file_header.bfSize = file_header.bfOffBits + info_header.biSizeImage;
+    width = img_24->width;
+    height = img_24->height;
+    bmp_bits = info_header.biBitCount;
+    palette = new_palette;
+    palette_index = pidx;
+}
+
+BMP_INDEX* BMP24_to_BMP8(BMP_PIXEL_24* img_24){
     auto* o_tree = new octree();
     auto* root = new octree_node(0);
     o_tree->leaf_nodes.emplace_back(root);
     o_tree->layer_nodes->emplace_back(0);
+    auto* palette = new Pixel_32[max_color]{};
+    auto* new_index = new unsigned char [img_24->width * img_24->height];
+    BMP_INDEX* img_8 = nullptr;
+
+    // 八叉树索引 - 调色版索引 配对，判断这个颜色是否存在
+    auto* nidx_pidx_pair = new int[pow(8, 8) + 1];
+    memset(nidx_pidx_pair, -1, sizeof(int) * (pow(8, 8) + 1));
+
+    int palette_num = 0;
 
     for (int i = 0; i < img_24->width * img_24->height; i++) {
         auto pixel = img_24->pixels[i];
         o_tree->add_color(root, pixel.R, pixel.G, pixel.B, false);
     }
+
+    for (int i = 0; i < img_24->width * img_24->height; i++) {
+        auto pixel = img_24->pixels[i];
+        auto nidx = o_tree->query_result_index(root, pixel.R, pixel.G, pixel.B);
+        // 该颜色存在于调色版中
+        if (nidx_pidx_pair[nidx] > 0) {
+            new_index[i] = (unsigned char)nidx_pidx_pair[nidx];
+        } else {
+            auto o_node = o_tree->leaf_nodes[nidx];
+            palette[palette_num].R = o_node->red_sum / o_node->count;
+            palette[palette_num].G = o_node->green_sum / o_node->count;
+            palette[palette_num].B = o_node->blue_sum / o_node->count;
+            palette[palette_num].A = 0;
+            new_index[i] = palette_num;
+            nidx_pidx_pair[nidx] = palette_num;
+            palette_num++;
+        }
+    }
+
+    img_8 = new BMP_INDEX(img_24, palette, new_index);
+    return img_8;
 }

@@ -19,4 +19,16 @@ iostream
 -
 vector
 -
+Color_Quantization.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp
+Pixel.h
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
+
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp
+vector
+-
+Pixel.h
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
+
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
 

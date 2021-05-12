@@ -45,8 +45,8 @@ void exp_4() {
 }
 
 void bonus_2() {
-
-
+    auto converted = BMP24_to_BMP8(img_24);
+    converted->derive_bmp("../EXP0/bonus2.bmp");
 }
 
 int main()

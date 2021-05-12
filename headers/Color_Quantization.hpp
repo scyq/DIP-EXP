@@ -33,7 +33,6 @@ public:
     void add_color(octree_node* &node, unsigned int red, unsigned int green, unsigned int blue, bool is_new);
     void reduce_color();
     void recursive_reduce(unsigned int idx);
-    void generate_palette();
 
     // 计算层数对应RGB位数的二进制组合
     static unsigned int mask_calculate(unsigned int level, unsigned int red, unsigned int green, unsigned int blue);
@@ -41,8 +40,9 @@ public:
     // 查询某颜色归并结束后对应的颜色的索引
     unsigned int query_result_index(octree_node* node, unsigned int red, unsigned int green, unsigned int blue);
 
-    // 最后得到的调色版
-    Pixel_32 *generated_palette = nullptr;
+    // 存储 八叉树索引 - 调色版索引的数组
+    // 数组下标是八叉树中的索引
+    unsigned int *nidx_pidx_pair;
 };
 
 unsigned int octree::mask_calculate(unsigned int level, unsigned int red, unsigned int green, unsigned int blue){
@@ -126,17 +126,13 @@ void octree::recursive_reduce(unsigned int idx) {
     }
 }
 
+// 该函数查找到的一定是保留在调色版内的颜色
 unsigned int octree::query_result_index(octree_node *node, unsigned int red, unsigned int green, unsigned int blue) {
     if(node->is_leaf) {
         return node->map_to;
     }
     auto idx = mask_calculate(node->level, red, green, blue);
     return query_result_index(node->child_ptr[idx], red, green, blue);
-}
-
-void octree::generate_palette() {
-    generated_palette = new Pixel_32[max_color]{};
-    
 }
 
 octree_node::octree_node(unsigned int lv) {
