@@ -44,6 +44,11 @@ void exp_4() {
     img_8->derive_bmp("../EXP0/4_8.bmp");
 }
 
+void bonus_2() {
+
+
+}
+
 int main()
 {
     img_8 = new BMP_INDEX("../EXP0/bmp_8.bmp");
@@ -51,5 +56,6 @@ int main()
 //    exp_1();
 //    exp_2();
 //    exp_3();
-    exp_4();
+//    exp_4();
+    bonus_2();
 }

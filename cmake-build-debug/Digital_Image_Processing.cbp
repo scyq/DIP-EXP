@@ -86,6 +86,12 @@
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp">
+			<Option target="Digital_Image_Processing"/>
+		</Unit>
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h">
+			<Option target="Digital_Image_Processing"/>
+		</Unit>
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

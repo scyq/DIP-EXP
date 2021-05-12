@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
+#include "Color_Quantization.hpp"
+#include "Pixel.h"
 
 typedef struct BMP_FILE_HEADER {
     // 这里理应有一个 file_type 但是由于长度是2，所以结构体的size是不正确的
@@ -25,16 +27,6 @@ typedef struct BMP_INFO_HEADER {
     unsigned int biClrUsed;   // 0
     unsigned int biClrImportant; // 0
 } BMP_INFO_HEADER;
-
-class Pixel_24{
-public:
-    unsigned char B, G, R;
-};
-
-class Pixel_32{
-public:
-    unsigned char B, G, R, A;
-};
 
 class Point{
 public:
@@ -94,7 +86,7 @@ public:
     virtual void translate_image(int delta_x, int delta_y)=0;
     virtual void derive_bmp(const char *target_file_name) = 0;
     virtual void set_new_size(int new_width, int new_height)=0;
-    int coordinate2index(int c_x, int c_y);
+    int coordinate2index(int c_x, int c_y) const;
 };
 
 // 存像素值的BMP
@@ -104,11 +96,11 @@ public:
     explicit BMP_PIXEL_24(const char *file_name);
     Pixel_24 *pixels;
     void recolor_rec(Pixel_24 target_pixel, Point left_bottom, Point right_top);
-    void derive_bmp(const char *target_file_name);
+    void derive_bmp(const char *target_file_name) override;
     Pixel_24 get_color(int x, int y);
-    void translate_image(int delta_x, int delta_y);
+    void translate_image(int delta_x, int delta_y) override;
     void translate_image(int delta_x, int delta_y, Pixel_24 new_bg_color);
-    void set_new_size(int new_width, int new_height);
+    void set_new_size(int new_width, int new_height) override;
     void set_new_size(int new_width, int new_height, Pixel_24 new_bg_color);
 };
 
@@ -120,12 +112,12 @@ public:
     int color_counts;
     unsigned char *palette_index;
     Pixel_32 *palette;
-    void recolor_palette(Pixel_32 target_color, int target_pixel_index);
-    void derive_bmp(const char *target_file_name);
+    void recolor_palette(Pixel_32 target_color, int target_pixel_index) const;
+    void derive_bmp(const char *target_file_name) override;
     Pixel_32 get_color(int x, int y);
-    void translate_image(int delta_x, int delta_y);
+    void translate_image(int delta_x, int delta_y) override;
     void translate_image(int delta_x, int delta_y, unsigned char new_bg_color);
-    void set_new_size(int new_width, int new_height);
+    void set_new_size(int new_width, int new_height) override;
     void set_new_size(int new_width, int new_height, unsigned char new_bg_color);
 };
 
@@ -157,7 +149,7 @@ BMP_INDEX::BMP_INDEX(const char *file_name) : BMP(file_name) {
     fclose(fp);
 }
 
-int BMP::coordinate2index(int c_x, int c_y) {
+int BMP::coordinate2index(int c_x, int c_y) const {
     return c_x + c_y * width;
 };
 
@@ -192,7 +184,7 @@ void BMP_INDEX::set_new_size(int new_width, int new_height) {
     auto _h = height;
     width = new_width;
     height = new_height;
-    unsigned char *new_index = new unsigned char[new_height * new_width]{};
+    auto *new_index = new unsigned char[new_height * new_width]{};
     for (int i = 0; i < _w; i++) {
         for (int j = 0; j < _h; j++) {
             int idx = i + j * _w;
@@ -216,7 +208,7 @@ void BMP_INDEX::set_new_size(int new_width, int new_height, unsigned char new_bg
     auto _h = height;
     width = new_width;
     height = new_height;
-    unsigned char *new_index = new unsigned char[new_height * new_width]{};
+    auto *new_index = new unsigned char[new_height * new_width]{};
     for (int i = 0; i < width * height; i++) {
         new_index[i] = new_bg_color;
     }
@@ -243,7 +235,7 @@ void BMP_PIXEL_24::set_new_size(int new_width, int new_height) {
     auto _h = height;
     width = new_width;
     height = new_height;
-    Pixel_24 *new_pixels = new Pixel_24[new_height * new_width]{};
+    auto *new_pixels = new Pixel_24[new_height * new_width]{};
     for (int i = 0; i < _w; i++) {
         for (int j = 0; j < _h; j++) {
             int idx = i + j * _w;
@@ -267,7 +259,7 @@ void BMP_PIXEL_24::set_new_size(int new_width, int new_height, Pixel_24 new_bg_c
     auto _h = height;
     width = new_width;
     height = new_height;
-    Pixel_24 *new_pixels = new Pixel_24[new_height * new_width]{};
+    auto *new_pixels = new Pixel_24[new_height * new_width]{};
     for (int i = 0; i < width * height; i++) {
         new_pixels[i] = new_bg_color;
     }
@@ -307,7 +299,7 @@ BMP_INDEX::~BMP_INDEX() {
     delete[] palette;
 }
 
-void BMP_INDEX::recolor_palette(Pixel_32 target_color, int target_pixel_index) {
+void BMP_INDEX::recolor_palette(Pixel_32 target_color, int target_pixel_index) const {
     palette[target_pixel_index] = target_color;
 }
 
@@ -316,7 +308,7 @@ BMP_PIXEL_24::~BMP_PIXEL_24() {
 }
 
 void BMP_PIXEL_24::translate_image(int delta_x, int delta_y) {
-    Pixel_24 *new_pixels = new Pixel_24[width * height]{};
+    auto *new_pixels = new Pixel_24[width * height]{};
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             int new_idx = (i + delta_x) + (j + delta_y) * width;
@@ -331,7 +323,7 @@ void BMP_PIXEL_24::translate_image(int delta_x, int delta_y) {
 }
 
 void BMP_PIXEL_24::translate_image(int delta_x, int delta_y, Pixel_24 new_bg_color) {
-    Pixel_24 *new_pixels = new Pixel_24[width * height]{};
+    auto *new_pixels = new Pixel_24[width * height]{};
     for (int i = 0; i < width * height; i++) {
         new_pixels[i] = new_bg_color;
     }
@@ -349,7 +341,7 @@ void BMP_PIXEL_24::translate_image(int delta_x, int delta_y, Pixel_24 new_bg_col
 }
 
 void BMP_INDEX::translate_image(int delta_x, int delta_y) {
-    unsigned char *new_index = new unsigned char [width * height]{};
+    auto *new_index = new unsigned char [width * height]{};
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             int new_idx = (i + delta_x) + (j + delta_y) * width;
@@ -364,7 +356,7 @@ void BMP_INDEX::translate_image(int delta_x, int delta_y) {
 }
 
 void BMP_INDEX::translate_image(int delta_x, int delta_y, unsigned char new_bg_color) {
-    unsigned char *new_index = new unsigned char [width * height]{};
+    auto *new_index = new unsigned char [width * height]{};
     for (int i = 0; i < width * height; i++) {
         new_index[i] = new_bg_color;
     }
@@ -379,4 +371,16 @@ void BMP_INDEX::translate_image(int delta_x, int delta_y, unsigned char new_bg_c
     auto to_delete = palette_index;
     palette_index = new_index;
     delete [] to_delete;
+}
+
+void BMP24_to_BMP8(BMP_PIXEL_24* img_24, BMP_INDEX* img_8){
+    auto* o_tree = new octree();
+    auto* root = new octree_node(0);
+    o_tree->leaf_nodes.emplace_back(root);
+    o_tree->layer_nodes->emplace_back(0);
+
+    for (int i = 0; i < img_24->width * img_24->height; i++) {
+        auto pixel = img_24->pixels[i];
+        o_tree->add_color(root, pixel.R, pixel.G, pixel.B, false);
+    }
 }

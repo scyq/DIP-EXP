@@ -3,4 +3,4 @@ project(Digital_Image_Processing)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Digital_Image_Processing EXP0/exp0.cpp headers/BMP.hpp)
+add_executable(Digital_Image_Processing EXP0/exp0.cpp headers/BMP.hpp headers/Color_Quantization.hpp headers/Pixel.h)
