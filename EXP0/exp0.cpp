@@ -3,6 +3,14 @@
 BMP_PIXEL_24 *img_24;
 BMP_INDEX *img_8;
 #include <unistd.h>
+//#include <chrono>
+//#include <ctime>
+
+//using std::cout; using std::endl;
+//using std::chrono::duration_cast;
+//using std::chrono::milliseconds;
+//using std::chrono::seconds;
+//using std::chrono::system_clock;
 
 void exp_1()
 {
@@ -44,6 +52,14 @@ void exp_4() {
     img_8->derive_bmp("../EXP0/4_8.bmp");
 }
 
+void bonus_1() {
+    img_8->info_header.biClrUsed = 128;
+    img_8->derive_bmp("../EXP0/bonus1_BiColorUsed.bmp");
+    img_8->info_header.biClrUsed = 0;
+    img_8->info_header.biClrImportant = 1;
+    img_8->derive_bmp("../EXP0/bonus1_BiColorImportant.bmp");
+}
+
 void bonus_2() {
     auto converted = BMP24_to_BMP8(img_24);
     converted->derive_bmp("../EXP0/bonus2.bmp");
@@ -57,5 +73,9 @@ int main()
 //    exp_2();
 //    exp_3();
 //    exp_4();
-    bonus_2();
+    bonus_1();
+//    auto now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//    bonus_2();
+//    auto end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//    std::cout << end - now;
 }

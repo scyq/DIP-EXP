@@ -24,8 +24,8 @@ typedef struct BMP_INFO_HEADER {
     unsigned int biSizeImage;  // 像素数据所占大小, 这个值应该等于上面文件头结构中bfSize-bfOffBits
     int biXPelsPerMeter;    // 0
     int biYPelsPerMeter;    // 0
-    unsigned int biClrUsed;   // 0
-    unsigned int biClrImportant; // 0
+    unsigned int biClrUsed;   // 图像使用的索引数 0代表全部
+    unsigned int biClrImportant; // 重要的索引数目 0代表全部
 } BMP_INFO_HEADER;
 
 class Point{
