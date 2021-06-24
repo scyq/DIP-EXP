@@ -96,6 +96,7 @@ public:
     void translate_image(int delta_x, int delta_y, Pixel_24 new_bg_color);
     void set_new_size(int new_width, int new_height) override;
     void set_new_size(int new_width, int new_height, Pixel_24 new_bg_color);
+    void to_grey();
 };
 
 // 存索引值的BMP
@@ -348,6 +349,15 @@ void BMP_PIXEL_24::translate_image(int delta_x, int delta_y, Pixel_24 new_bg_col
     delete [] to_delete;
 }
 
+void BMP_PIXEL_24::to_grey() {
+    for (int i = 0; i < width * height; i++) {
+        auto t = (pixels[i].R + pixels[i].G + pixels[i].B) / 3;
+        pixels[i].R = t;
+        pixels[i].G = t;
+        pixels[i].B = t;
+    }
+}
+
 void BMP_INDEX::translate_image(int delta_x, int delta_y) {
     auto *new_index = new unsigned char [width * height]{};
     for (int i = 0; i < width; i++) {
@@ -437,3 +447,6 @@ BMP_INDEX* BMP24_to_BMP8(BMP_PIXEL_24* img_24){
     img_8 = new BMP_INDEX(img_24, palette, new_index);
     return img_8;
 }
+
+
+
