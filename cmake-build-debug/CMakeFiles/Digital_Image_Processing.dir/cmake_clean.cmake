@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o"
+  "CMakeFiles/Digital_Image_Processing.dir/EXP1/exp1.cpp.o"
   "Digital_Image_Processing"
   "Digital_Image_Processing.pdb"
 )

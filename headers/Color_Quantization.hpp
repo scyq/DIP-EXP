@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Pixel.h"
+#include "Pixel.hpp"
 
 unsigned int max_color = 256;
 unsigned int current_color = 0;

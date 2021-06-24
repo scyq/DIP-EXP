@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP1/exp1.cpp
 ../headers/BMP.hpp
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
-unistd.h
--
+../headers/Histogram_Equalization.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Histogram_Equalization.hpp
 
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
 cstdio
@@ -21,14 +21,24 @@ vector
 -
 Color_Quantization.hpp
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp
-Pixel.h
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
+Pixel.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.hpp
 
 /Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp
 vector
 -
-Pixel.h
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
+Pixel.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.hpp
 
-/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Histogram_Equalization.hpp
+BMP.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
+vector
+-
+set
+-
+
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.hpp
+BMP.hpp
+/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp
 

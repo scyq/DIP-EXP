@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "Color_Quantization.hpp"
-#include "Pixel.h"
+#include "Pixel.hpp"
 
 typedef struct BMP_FILE_HEADER {
     // 这里理应有一个 file_type 但是由于长度是2，所以结构体的size是不正确的
@@ -32,14 +32,6 @@ class Point{
 public:
     int x, y;
 };
-
-void print_pixel(Pixel_24 p) {
-    std::cout << (int) p.R << ' ' << (int) p.G << ' ' << (int) p.B << std::endl;
-}
-
-void print_pixel(Pixel_32 p) {
-    std::cout << (int) p.R << ' ' << (int) p.G << ' ' << (int) p.B << " " << (int) p.A << std::endl;
-}
 
 Pixel_24 get_random_color_24() {
     srand((unsigned) time(nullptr));
@@ -96,6 +88,7 @@ public:
     ~BMP_PIXEL_24();
     explicit BMP_PIXEL_24(const char *file_name);
     Pixel_24 *pixels;
+    Pixel_YUV *yuv_pixels;
     void recolor_rec(Pixel_24 target_pixel, Point left_bottom, Point right_top);
     void derive_bmp(const char *target_file_name) override;
     Pixel_24 get_color(int x, int y);
@@ -114,6 +107,7 @@ public:
     int color_counts;
     unsigned char *palette_index;
     Pixel_32 *palette;
+    Pixel_YUV *yuv_palette;
     void recolor_palette(Pixel_32 target_color, int target_pixel_index) const;
     void derive_bmp(const char *target_file_name) override;
     Pixel_32 get_color(int x, int y);
@@ -138,17 +132,25 @@ BMP::BMP(const char *file_name) {
 
 BMP_PIXEL_24::BMP_PIXEL_24(const char *file_name) : BMP(file_name) {
     pixels = new Pixel_24[width * height];
+    yuv_pixels = new Pixel_YUV[width * height];
     fread(pixels, 1, width * height * sizeof(Pixel_24), fp);
     fclose(fp);
+    for (int i = 0; i < width * height; i++) {
+        rgb2yuv(pixels[i], yuv_pixels[i]);
+    }
 }
 
 BMP_INDEX::BMP_INDEX(const char *file_name) : BMP(file_name) {
     color_counts = pow(2, bmp_bits);
     palette = new Pixel_32[color_counts];
+    yuv_palette = new Pixel_YUV[color_counts];
     palette_index = new unsigned char[width * height];
     fread(palette, 1, color_counts * sizeof(Pixel_32), fp);
     fread(palette_index, 1, width * height * sizeof(int), fp);
     fclose(fp);
+    for (int i = 0; i < color_counts; i++) {
+        rgb2yuv(palette[i], yuv_palette[i]);
+    }
 }
 
 int BMP::coordinate2index(int c_x, int c_y) const {
@@ -299,8 +301,9 @@ void BMP_PIXEL_24::derive_bmp(const char *target_file_name) {
 }
 
 BMP_INDEX::~BMP_INDEX() {
-    delete[] palette_index;
-    delete[] palette;
+    delete [] palette_index;
+    delete [] palette;
+    delete [] yuv_palette;
 }
 
 void BMP_INDEX::recolor_palette(Pixel_32 target_color, int target_pixel_index) const {
@@ -308,7 +311,8 @@ void BMP_INDEX::recolor_palette(Pixel_32 target_color, int target_pixel_index) c
 }
 
 BMP_PIXEL_24::~BMP_PIXEL_24() {
-    delete[] pixels;
+    delete [] pixels;
+    delete [] yuv_pixels;
 }
 
 void BMP_PIXEL_24::translate_image(int delta_x, int delta_y) {

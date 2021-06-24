@@ -123,32 +123,32 @@ Digital_Image_Processing/fast:
 	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/build
 .PHONY : Digital_Image_Processing/fast
 
-EXP0/exp0.o: EXP0/exp0.cpp.o
+EXP1/exp1.o: EXP1/exp1.cpp.o
 
-.PHONY : EXP0/exp0.o
+.PHONY : EXP1/exp1.o
 
 # target to build an object file
-EXP0/exp0.cpp.o:
-	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.o
-.PHONY : EXP0/exp0.cpp.o
+EXP1/exp1.cpp.o:
+	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP1/exp1.cpp.o
+.PHONY : EXP1/exp1.cpp.o
 
-EXP0/exp0.i: EXP0/exp0.cpp.i
+EXP1/exp1.i: EXP1/exp1.cpp.i
 
-.PHONY : EXP0/exp0.i
+.PHONY : EXP1/exp1.i
 
 # target to preprocess a source file
-EXP0/exp0.cpp.i:
-	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.i
-.PHONY : EXP0/exp0.cpp.i
+EXP1/exp1.cpp.i:
+	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP1/exp1.cpp.i
+.PHONY : EXP1/exp1.cpp.i
 
-EXP0/exp0.s: EXP0/exp0.cpp.s
+EXP1/exp1.s: EXP1/exp1.cpp.s
 
-.PHONY : EXP0/exp0.s
+.PHONY : EXP1/exp1.s
 
 # target to generate assembly for a file
-EXP0/exp0.cpp.s:
-	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP0/exp0.cpp.s
-.PHONY : EXP0/exp0.cpp.s
+EXP1/exp1.cpp.s:
+	$(MAKE) -f CMakeFiles/Digital_Image_Processing.dir/build.make CMakeFiles/Digital_Image_Processing.dir/EXP1/exp1.cpp.s
+.PHONY : EXP1/exp1.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Digital_Image_Processing"
-	@echo "... EXP0/exp0.o"
-	@echo "... EXP0/exp0.i"
-	@echo "... EXP0/exp0.s"
+	@echo "... EXP1/exp1.o"
+	@echo "... EXP1/exp1.i"
+	@echo "... EXP1/exp1.s"
 .PHONY : help
 
 

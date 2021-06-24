@@ -80,7 +80,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP0/exp0.cpp">
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/EXP1/exp1.cpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/BMP.hpp">
@@ -89,7 +89,10 @@
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Color_Quantization.hpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
-		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.h">
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Histogram_Equalization.hpp">
+			<Option target="Digital_Image_Processing"/>
+		</Unit>
+		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/headers/Pixel.hpp">
 			<Option target="Digital_Image_Processing"/>
 		</Unit>
 		<Unit filename="/Users/yuqingchen/Documents/GitHub/Digital Image Processing/CMakeLists.txt">
